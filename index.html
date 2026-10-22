@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A professional personal expense tracker dashboard.">
+  <title>Ledger — Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Ledger home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18.5V9.8M12 18.5V5.5M19 18.5v-5.2" /></svg></span>
+        <span>ledger<span class="brand-dot">.</span></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a class="nav-link active" href="#overview"><span class="nav-icon">▦</span> Overview</a>
+        <a class="nav-link" href="#transactions"><span class="nav-icon">↔</span> Transactions</a>
+        <a class="nav-link" href="#analytics"><span class="nav-icon">◔</span> Analytics</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="side-tip">
+          <div class="tip-icon">✦</div>
+          <strong>Build better habits</strong>
+          <p>Small insights today can make a big difference tomorrow.</p>
+        </div>
+        <div class="profile">
+          <div class="avatar">Y</div>
+          <div class="profile-copy"><strong>Your workspace</strong><span>Personal account</span></div>
+          <span class="profile-menu">•••</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="overview">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">YOUR FINANCES AT A GLANCE</p>
+          <h1>Overview</h1>
+        </div>
+        <div class="top-actions">
+          <span class="today-label" id="today-label"></span>
+          <button class="button button-primary" id="open-modal"><span aria-hidden="true">＋</span> Add transaction</button>
+        </div>
+      </header>
+
+      <section class="summary-grid" aria-label="Financial summary">
+        <article class="summary-card balance-card">
+          <div class="summary-top"><span>Total balance</span><span class="summary-icon balance-icon">◈</span></div>
+          <div class="summary-value" id="total-balance">Rs 0</div>
+          <div class="summary-foot"><span class="status-dot"></span> Your current net balance</div>
+        </article>
+        <article class="summary-card">
+          <div class="summary-top"><span>Total income</span><span class="summary-icon income-icon">↙</span></div>
+          <div class="summary-value" id="total-income">Rs 0</div>
+          <div class="summary-foot"><span class="positive-text">↗</span> Money coming in</div>
+        </article>
+        <article class="summary-card">
+          <div class="summary-top"><span>Total expenses</span><span class="summary-icon expense-icon">↗</span></div>
+          <div class="summary-value" id="total-expenses">Rs 0</div>
+          <div class="summary-foot"><span class="negative-text">↗</span> Money going out</div>
+        </article>
+      </section>
+
+      <section class="analytics-grid" id="analytics">
+        <article class="panel spending-panel">
+          <div class="panel-heading">
+            <div><h2>Spending overview</h2><p>Income vs. expenses by month</p></div>
+            <label class="select-wrap"><span class="sr-only">Chart period</span><select id="chart-period"><option value="6">Last 6 months</option><option value="12">Last 12 months</option></select></label>
+          </div>
+          <div class="chart-area"><canvas id="monthly-chart" aria-label="Monthly income and expenses chart"></canvas><p class="chart-fallback" id="monthly-fallback" hidden>Charts need an internet connection to load Chart.js.</p></div>
+        </article>
+        <article class="panel category-panel">
+          <div class="panel-heading"><div><h2>Where it goes</h2><p>Expenses by category</p></div></div>
+          <div class="donut-area"><canvas id="category-chart" aria-label="Expense breakdown by category"></canvas><p class="chart-fallback" id="category-fallback" hidden>Charts need an internet connection to load Chart.js.</p><div class="donut-center" id="donut-center"><span>Total spent</span><strong>Rs 0</strong></div></div>
+          <div class="category-legend" id="category-legend"></div>
+        </article>
+      </section>
+
+      <section class="panel transactions-panel" id="transactions">
+        <div class="panel-heading transactions-heading">
+          <div><h2>Recent transactions</h2><p>Keep track of where your money moves</p></div>
+          <button class="button button-secondary" id="export-csv">↓ Export CSV</button>
+        </div>
+        <div class="filters">
+          <label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Search transactions</span><input id="search-input" type="search" placeholder="Search transactions..."></label>
+          <label class="filter-select"><span class="sr-only">Transaction type</span><select id="type-filter"><option value="all">All types</option><option value="income">Income</option><option value="expense">Expenses</option></select></label>
+          <label class="filter-select"><span class="sr-only">Category</span><select id="category-filter"><option value="all">All categories</option></select></label>
+          <label class="filter-select date-filter"><span class="sr-only">From date</span><input id="date-from" type="date" aria-label="From date"></label>
+          <label class="filter-select date-filter"><span class="sr-only">To date</span><input id="date-to" type="date" aria-label="To date"></label>
+          <button class="reset-filters" id="reset-filters" type="button">Reset</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>TRANSACTION</th><th>CATEGORY</th><th>DATE</th><th>TYPE</th><th class="amount-heading">AMOUNT</th><th><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody id="transaction-body"></tbody>
+          </table>
+          <div class="empty-state" id="empty-state" hidden><div class="empty-icon">⌕</div><strong>No transactions found</strong><p>Try changing your filters or add a new transaction.</p><button class="button button-secondary" id="empty-add">Add your first transaction</button></div>
+        </div>
+        <div class="table-footer"><span id="results-count">Showing 0 transactions</span><button class="text-button" id="clear-all">Clear all transactions</button></div>
+      </section>
+      <footer class="footer-note">Made for mindful money habits <span>•</span> Your data stays in this browser</footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-heading"><div><p class="eyebrow">TRANSACTION DETAILS</p><h2 id="modal-title">Add transaction</h2></div><button class="close-button" id="close-modal" aria-label="Close dialog">×</button></div>
+      <form id="transaction-form">
+        <div class="form-field"><span class="field-label">Transaction type</span><div class="type-switch"><label><input type="radio" name="type" value="expense" checked><span>− Expense</span></label><label><input type="radio" name="type" value="income"><span>＋ Income</span></label></div></div>
+        <div class="form-field"><label for="title-input">Name</label><input id="title-input" name="title" type="text" maxlength="80" placeholder="e.g. Grocery shopping" required></div>
+        <div class="form-row">
+          <div class="form-field"><label for="amount-input">Amount (PKR)</label><input id="amount-input" name="amount" type="number" min="0.01" max="1000000000" step="0.01" placeholder="0.00" required></div>
+          <div class="form-field"><label for="category-input">Category</label><select id="category-input" name="category" required></select></div>
+        </div>
+        <div class="form-field"><label for="date-input">Date</label><input id="date-input" name="date" type="date" required></div>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+        <div class="modal-actions"><button class="button button-secondary" type="button" id="cancel-modal">Cancel</button><button class="button button-primary" type="submit" id="save-transaction">Save transaction</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
